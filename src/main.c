@@ -1,24 +1,32 @@
-// main.c
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define MAX_INPUT 1024
+#define MAX_ARGS 64
+
+char **parse_input(char *input);
+void execute(char **args);
 
 int main() {
     char input[MAX_INPUT];
 
     while (1) {
-        printf("myshell> ");          // print prompt
+        printf("myshell> ");
         fflush(stdout);
 
-        if (!fgets(input, MAX_INPUT, stdin)) break;  // read input
+        if (!fgets(input, MAX_INPUT, stdin)) break;
 
-        input[strcspn(input, "\n")] = 0;  // remove newline
+        input[strcspn(input, "\n")] = 0;
 
-        if (strcmp(input, "exit") == 0) break;  // exit on "exit"
+        if (strlen(input) == 0) continue;
 
-        printf("You typed: %s\n", input);  // just echo for now
+        if (strcmp(input, "exit") == 0) break;
+
+        char **args = parse_input(input);
+        execute(args);
+        free(args);
     }
     return 0;
 }
