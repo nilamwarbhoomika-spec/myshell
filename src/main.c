@@ -1,13 +1,12 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define MAX_INPUT 1024
-#define MAX_ARGS 64
 
 char **parse_input(char *input);
 void execute(char **args);
+int handle_builtin(char **args);
 
 int main() {
     char input[MAX_INPUT];
@@ -22,10 +21,13 @@ int main() {
 
         if (strlen(input) == 0) continue;
 
-        if (strcmp(input, "exit") == 0) break;
-
         char **args = parse_input(input);
-        execute(args);
+
+        // Check builtins first
+        if (handle_builtin(args) == 0) {
+            execute(args);  // not a builtin, run normally
+        }
+
         free(args);
     }
     return 0;
